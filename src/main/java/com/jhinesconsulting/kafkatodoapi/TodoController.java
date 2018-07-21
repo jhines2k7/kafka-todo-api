@@ -74,8 +74,13 @@ public class TodoController {
     }
 
     @GetMapping("/completed")
-    ResponseEntity<ArrayList<Todo>> getCompleted() {
-        return ResponseEntity.ok(new ArrayList<>(completeTodosView.getTodos().values()));
+    ResponseEntity<List<Todo>> getCompleted() {
+        List<Todo> completedTodos = new ArrayList<>(completeTodosView.getTodos().values())
+                .stream()
+                .filter(t -> !t.isCleared())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(completedTodos);
     }
 
     @PutMapping("/{todoId}")
