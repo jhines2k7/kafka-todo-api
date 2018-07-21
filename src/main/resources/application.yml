@@ -1,0 +1,4 @@
+bootstrapServersUrl: 192.168.99.100
+bootstrapServersPort: 9092
+schemaRegistryPort: 8081
+topic: todo-events

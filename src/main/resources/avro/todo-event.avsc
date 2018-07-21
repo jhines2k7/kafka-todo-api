@@ -1,0 +1,41 @@
+{
+    "type": "record",
+    "namespace": "com.jhinesconsulting",
+    "name": "TodoEvent",
+    "doc": "Avro schema for the EventSourced Todo RESTful api application",
+    "fields": [
+        {
+            "name": "action",
+            "type": "string",
+            "default": "CREATE",
+            "doc": "Event type"
+        },
+        {
+            "name": "id",
+            "type": "string",
+            "doc": "Unique identifier generated using a UUID"
+        },
+        {
+            "name": "title",
+            "type": "string",
+            "doc": "Content of the todo"
+        },
+        {
+            "name": "active",
+            "type": "boolean",
+            "default": false,
+            "doc": "Field indicating if a todo has been completed"
+        },
+        {
+            "name": "cleared",
+            "type": "boolean",
+            "default": false,
+            "doc": "Field indicating if an inactive todo has been cleared"
+        },
+        {
+            "name": "created",
+            "type": "long",
+            "doc": "Unix timestamp for the date the todo was created"
+        }
+    ]
+}
