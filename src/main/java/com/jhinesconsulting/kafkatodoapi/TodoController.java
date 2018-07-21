@@ -66,8 +66,13 @@ public class TodoController {
     }
 
     @GetMapping
-    ResponseEntity<ArrayList<Todo>> getAll() {
-        return ResponseEntity.ok(new ArrayList<>(allTodosView.getTodos().values()));
+    ResponseEntity<List<Todo>> getAll() {
+        List<Todo> allTodos = new ArrayList<>(allTodosView.getTodos().values())
+                .stream()
+                .filter(t -> t.isCleared())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(allTodos);
     }
 
     @GetMapping("/completed")
