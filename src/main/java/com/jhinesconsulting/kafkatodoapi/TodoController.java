@@ -9,9 +9,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -69,7 +67,7 @@ public class TodoController {
     ResponseEntity<List<Todo>> getAll() {
         List<Todo> allTodos = new ArrayList<>(allTodosView.getTodos().values())
                 .stream()
-                .filter(t -> t.isCleared())
+                .filter(t -> !t.isCleared())
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(allTodos);
@@ -115,17 +113,13 @@ public class TodoController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/clear/{todoId}")
-    ResponseEntity<?> clearCompleted(@PathVariable String todoId) {
-        todoEventBuilder.setAction("CLEAR");
-        todoEventBuilder.setId(todoId);
-        todoEventBuilder.setTitle("");
-        todoEventBuilder.setActive(false);
-        todoEventBuilder.setCleared(true);
-        todoEventBuilder.setCreated(new Timestamp(System.currentTimeMillis()).getTime());
-
-        todoEventRecordProducer.send(
-                new ProducerRecord<String, TodoEvent>(applicationProperties.getTopic(), todoEventBuilder.build()));
+    @PutMapping("/clear-completed")
+    ResponseEntity<?> clearCompleted() {
+        for(Todo todo : allTodosView.getTodos().values()) {
+            if(!todo.isActive()) {
+                todo.setCleared(true);
+            }
+        }
 
         return ResponseEntity.ok().build();
     }
