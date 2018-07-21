@@ -23,7 +23,7 @@
         {
             "name": "active",
             "type": "boolean",
-            "default": false,
+            "default": true,
             "doc": "Field indicating if a todo has been completed"
         },
         {
