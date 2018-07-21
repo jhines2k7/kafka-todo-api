@@ -63,9 +63,9 @@ public class TodoEventRecordConsumer {
                     allTodosView.getTodos().put(updatedTodo.getId(), updatedTodo);
 
                     // update todo in complete todos view hashmap
-                    if(updatedTodo.isActive()) {
+                    if(!updatedTodo.isActive()) {
                         completeTodosView.getTodos().put(updatedTodo.getId(), updatedTodo);
-                    } else if(!updatedTodo.isActive()) {
+                    } else if(updatedTodo.isActive()) {
                         completeTodosView.getTodos().remove(updatedTodo.getId());
                     }
                 }
