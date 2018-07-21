@@ -13,12 +13,15 @@ public class Todo {
     @JsonIgnore
     private String id;
 
+    @JsonIgnore
+    private Long created;
+
+    @JsonIgnore
+    private boolean cleared;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String title;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private boolean active;
-
-    @JsonIgnore
-    private Long created;
 }
