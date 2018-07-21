@@ -109,4 +109,9 @@ public class TodoController {
 
         return ResponseEntity.ok().build();
     }
+
+//    @PutMapping("/clear-completed")
+//    ResponseEntity<?> clearCompleted() {
+//
+//    }
 }
