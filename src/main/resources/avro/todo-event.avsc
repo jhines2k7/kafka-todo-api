@@ -5,6 +5,11 @@
     "doc": "Avro schema for the EventSourced Todo RESTful api application",
     "fields": [
         {
+            "name": "eventId",
+            "type": "string",
+            "doc": "Unique event identifier generated using a UUID"
+        },
+        {
             "name": "action",
             "type": "string",
             "default": "CREATE",
@@ -13,7 +18,7 @@
         {
             "name": "id",
             "type": "string",
-            "doc": "Unique identifier generated using a UUID"
+            "doc": "Unique todo identifier generated using a UUID"
         },
         {
             "name": "title",

@@ -37,14 +37,16 @@ public class TodoController {
 
     @PostMapping
     ResponseEntity<?> add(@RequestBody Todo todo) {
-        String todoId = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString();
+        String todoId = uuid.substring(0, Math.min(uuid.length(), 8));
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         todo.setId(todoId);
         todo.setCreated(timestamp.getTime());
 
-        todoEventBuilder.setId(todo.getId());
+        todoEventBuilder.setEventId(UUID.randomUUID().toString());
+        todoEventBuilder.setId(todoId);
         todoEventBuilder.setAction("CREATE");
         todoEventBuilder.setCreated(todo.getCreated());
         todoEventBuilder.setTitle(todo.getTitle());
@@ -86,6 +88,7 @@ public class TodoController {
     @PutMapping("/{todoId}")
     ResponseEntity<?> put(@PathVariable String todoId, @RequestBody Todo todo) {
         // store event in kafka
+        todoEventBuilder.setEventId(UUID.randomUUID().toString());
         todoEventBuilder.setAction("UPDATE");
         todoEventBuilder.setId(todoId);
         todoEventBuilder.setTitle(todo.getTitle());
@@ -106,6 +109,7 @@ public class TodoController {
 
         Todo todo = todoEventReducer.reduce(filteredTodoEventsById);
 
+        todoEventBuilder.setEventId(UUID.randomUUID().toString());
         todoEventBuilder.setAction("TOGGLE");
         todoEventBuilder.setId(todoId);
         todoEventBuilder.setTitle("");
@@ -122,7 +126,15 @@ public class TodoController {
     ResponseEntity<?> clearCompleted() {
         for(Todo todo : allTodosView.getTodos().values()) {
             if(!todo.isActive()) {
-                todo.setCleared(true);
+                todoEventBuilder.setEventId(UUID.randomUUID().toString());
+                todoEventBuilder.setAction("CLEAR");
+                todoEventBuilder.setId(todo.getId());
+                todoEventBuilder.setTitle("");
+                todoEventBuilder.setCleared(true);
+                todoEventBuilder.setCreated(new Timestamp(System.currentTimeMillis()).getTime());
+
+                todoEventRecordProducer.send(
+                        new ProducerRecord<String, TodoEvent>(applicationProperties.getTopic(), todoEventBuilder.build()));
             }
         }
 
