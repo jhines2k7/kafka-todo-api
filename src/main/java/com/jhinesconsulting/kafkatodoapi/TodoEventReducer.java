@@ -20,6 +20,8 @@ public class TodoEventReducer {
                 todo.setActive(todoEvent.getActive());
             } else if(todoEvent.getAction().equals("TOGGLE")) {
                 todo.setActive(todoEvent.getActive());
+            } else if(todoEvent.getAction().equals("CLEAR")) {
+                todo.setCleared(true);
             }
         }
 

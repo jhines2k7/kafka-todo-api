@@ -49,25 +49,23 @@ public class TodoEventRecordConsumer {
                     allTodosView.getTodos().put(todoEvent.getId(), todo);
                 }
 
-                if(todoEvent.getAction().equals("UPDATE") || todoEvent.getAction().equals("TOGGLE")) {
-                    // filter todos by id
-                    List<TodoEvent> filteredTodoEventsById = todoEventRecordStore.getTodoEvents()
-                            .stream()
-                            .filter(t -> t.getId().equals(todoEvent.getId()))
-                            .collect(Collectors.toList());
+                // filter todos by id
+                List<TodoEvent> filteredTodoEventsById = todoEventRecordStore.getTodoEvents()
+                        .stream()
+                        .filter(t -> t.getId().equals(todoEvent.getId()))
+                        .collect(Collectors.toList());
 
-                    // reduce updated todo
-                    Todo updatedTodo = todoEventReducer.reduce(filteredTodoEventsById);
+                // reduce updated todo
+                Todo updatedTodo = todoEventReducer.reduce(filteredTodoEventsById);
 
-                    // update todo in all todos view hashmap
-                    allTodosView.getTodos().put(updatedTodo.getId(), updatedTodo);
+                // update todo in all todos view hashmap
+                allTodosView.getTodos().put(updatedTodo.getId(), updatedTodo);
 
-                    // update todo in complete todos view hashmap
-                    if(!updatedTodo.isActive()) {
-                        completeTodosView.getTodos().put(updatedTodo.getId(), updatedTodo);
-                    } else if(updatedTodo.isActive()) {
-                        completeTodosView.getTodos().remove(updatedTodo.getId());
-                    }
+                // update todo in complete todos view hashmap
+                if(!updatedTodo.isActive()) {
+                    completeTodosView.getTodos().put(updatedTodo.getId(), updatedTodo);
+                } else if(updatedTodo.isActive()) {
+                    completeTodosView.getTodos().remove(updatedTodo.getId());
                 }
             }
 

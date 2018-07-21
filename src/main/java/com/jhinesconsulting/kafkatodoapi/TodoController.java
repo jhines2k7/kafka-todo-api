@@ -115,8 +115,18 @@ public class TodoController {
         return ResponseEntity.ok().build();
     }
 
-//    @PutMapping("/clear-completed")
-//    ResponseEntity<?> clearCompleted() {
-//
-//    }
+    @PutMapping("/clear/{todoId}")
+    ResponseEntity<?> clearCompleted(@PathVariable String todoId) {
+        todoEventBuilder.setAction("CLEAR");
+        todoEventBuilder.setId(todoId);
+        todoEventBuilder.setTitle("");
+        todoEventBuilder.setActive(false);
+        todoEventBuilder.setCleared(true);
+        todoEventBuilder.setCreated(new Timestamp(System.currentTimeMillis()).getTime());
+
+        todoEventRecordProducer.send(
+                new ProducerRecord<String, TodoEvent>(applicationProperties.getTopic(), todoEventBuilder.build()));
+
+        return ResponseEntity.ok().build();
+    }
 }
